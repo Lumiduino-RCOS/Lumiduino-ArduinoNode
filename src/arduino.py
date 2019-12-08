@@ -13,7 +13,6 @@ class Arduino(Subject):
         super().__init__()
         self.state = ArduinoState.STARTUP
         self.send_queue = Queue()
-        try:
             arduino_list = self.find_arduinos(serial.tools.list_ports.comports())
             active_arduino = arduino_list[arduino_index]
             self.serial_connection = serial.Serial(active_arduino.device)
