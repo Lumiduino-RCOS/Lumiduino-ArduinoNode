@@ -1,10 +1,10 @@
 import socket
 import select
 import threading
-from customlogger import CustomLogger
+from LumiduinoNodePython.customlogger import CustomLogger
 #from LumiduinoNodePython.tcpclient import TcpClient
 #from tcpclient import TcpClient
-import containers
+import LumiduinoNodePython.containers as containers
 dir(containers)
 #from containers import TcpClient
 

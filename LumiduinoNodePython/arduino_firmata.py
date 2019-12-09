@@ -3,7 +3,7 @@ import time
 import threading
 import queue
 import concurrent.futures
-from customlogger import CustomLogger
+from LumiduinoNodePython.customlogger import CustomLogger
 
 NEOPIXEL_SET = 0x72
 NEOPIXEL_REGISTER = 0x74
@@ -61,14 +61,16 @@ class FirmataArduino(object):
     def register_strip(self, pin: int, count: int):
         self.add_send(NEOPIXEL_REGISTER, [pin, count])
         #self.board.send_sysex(0x74, [pin, count])
-        print('registered new strip on pin {} with lenght {}'.format(pin, count))
+        self.logger.log_activity('registered new strip on pin {} with lenght {}'.format(pin, count))
     
     def send_pixelval(self, pixel, r, g, b):
         self.add_send(NEOPIXEL_SET, [pixel, r, g, b])
         #self.board.send_sysex(0x72, [pixel, r, g, b])
+        self.logger.log_activity('changed pixel val {} to {}:{}:{}'.format(pixel, r, g, b))
 
     def show_strip(self):
         self.add_send(NEOPIXEL_SHOW, [])
-    
+        self.logger.log_activity('strip is being shown')
+        
     def handle_register_response(self):
         print("Register_response")

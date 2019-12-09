@@ -1,7 +1,8 @@
 '''from arduino_firmata import FirmataArduino
 from tcpserver import TcpServer'''
 import time
-from containers import LumiduinoServer
+from LumiduinoNodePython.containers import LumiduinoServer
+import signal
 """nar = FirmataArduino('/dev/ttyACM0')
 nar.register_strip(9, 100)
 while True:
@@ -14,6 +15,12 @@ while True:
         nar.send_pixelval(i, 0,0,0)
         nar.show_strip()
     nar.show_strip()"""
+
+def safely_close(signalnumber, frame):
+    print("Safely closing")
+    LumiduinoServer.logger().close()
+    exit(0)
+
 LumiduinoServer.config.override({
     "logging": {
         'verbose': True,
@@ -27,4 +34,7 @@ LumiduinoServer.config.override({
     }
 })
 server = LumiduinoServer.lumiduino_tcp_server()
+signal.signal(signal.SIGTERM, safely_close)
+signal.signal(signal.SIGINT, safely_close)
+
 #tpserve = TcpServer(6879)

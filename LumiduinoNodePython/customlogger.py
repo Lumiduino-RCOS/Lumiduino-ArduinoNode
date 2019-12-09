@@ -6,7 +6,6 @@ class CustomLogger(object):
         self.logging_file = open(file_path+"/LumiduinoLog.log", 'w')
         self.verbose = verbose
 
-
     def write_log(self, log_msg):
         if self.verbose:
             print(log_msg)
@@ -26,3 +25,12 @@ class CustomLogger(object):
 
     def log_warning(self, warning):
         message = "[WARNING] {} --- {}".format(warning, time.time())
+        self.write_log(message)
+
+    def log_activity(self, message):
+        message = "[NOTIFICATION] {} --- {}".format(message, time.time())
+        self.write_log(message)
+
+    def close(self):
+        print("closing")
+        self.logging_file.close()

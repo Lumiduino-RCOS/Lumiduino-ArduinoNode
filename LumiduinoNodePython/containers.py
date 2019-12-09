@@ -1,8 +1,8 @@
 from dependency_injector import providers, containers
-from tcpserver import TcpServer
-from tcpclient import TcpClient
-from customlogger import CustomLogger
-from arduino_firmata import FirmataArduino
+from LumiduinoNodePython.tcpserver import TcpServer
+from LumiduinoNodePython.tcpclient import TcpClient
+from LumiduinoNodePython.customlogger import CustomLogger
+from LumiduinoNodePython.arduino_firmata import FirmataArduino
 
 class LumiduinoServer(containers.DeclarativeContainer):
 
@@ -25,4 +25,7 @@ class LumiduinoServer(containers.DeclarativeContainer):
     )
 
 class LumiduinoClient(containers.DeclarativeContainer):
-    tcp_client = providers.Factory(TcpClient, arduino_service=LumiduinoServer.arduino_service)
+    tcp_client = providers.Factory(
+        TcpClient,
+        arduino_service=LumiduinoServer.arduino_service,
+        logger=LumiduinoServer.logger)
