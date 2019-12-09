@@ -4,6 +4,7 @@ import threading
 import queue
 import concurrent.futures
 from LumiduinoNodePython.customlogger import CustomLogger
+from LumiduinoNodePython.model.lightstrip import NeopixelStrip
 
 NEOPIXEL_SET = 0x72
 NEOPIXEL_REGISTER = 0x74
@@ -17,6 +18,7 @@ class FirmataArduino(object):
         self.logger = logger
         self.send_queue = queue.Queue(maxsize=30)
         self.board: Arduino = None
+        self.strip = None
 
         self.executor = concurrent.futures.ThreadPoolExecutor()
         self.recv_future = None
@@ -62,15 +64,24 @@ class FirmataArduino(object):
         self.add_send(NEOPIXEL_REGISTER, [pin, count])
         #self.board.send_sysex(0x74, [pin, count])
         self.logger.log_activity('registered new strip on pin {} with lenght {}'.format(pin, count))
-    
+        self.strip = NeopixelStrip(count)
+
     def send_pixelval(self, pixel, r, g, b):
-        self.add_send(NEOPIXEL_SET, [pixel, r, g, b])
-        #self.board.send_sysex(0x72, [pixel, r, g, b])
-        self.logger.log_activity('changed pixel val {} to {}:{}:{}'.format(pixel, r, g, b))
+        if self.strip.change_pixel_value(pixel, r, g, b):
+            self.add_send(NEOPIXEL_SET, [pixel, r, g, b])
+            #self.board.send_sysex(0x72, [pixel, r, g, b])
+            self.logger.log_activity('changed pixel val {} to {}:{}:{}'.format(pixel, r, g, b))
+        else:
+            self.logger.log_activity('pixel value remained the same')
+
 
     def show_strip(self):
-        self.add_send(NEOPIXEL_SHOW, [])
-        self.logger.log_activity('strip is being shown')
-        
+        if not self.strip.has_been_shown():
+            self.strip.show()
+            self.add_send(NEOPIXEL_SHOW, [])
+            self.logger.log_activity('strip is being shown')
+        else:
+            self.logger.log_activity('strip does not need to be shown')
+
     def handle_register_response(self):
         print("Register_response")
