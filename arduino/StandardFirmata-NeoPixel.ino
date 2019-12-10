@@ -50,11 +50,9 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_NeoMatrix.h>
 #include <Adafruit_NeoPixel.h>
-#define NEOPIXEL_SET 0x72
-#define NEOMATRIX 0x73
-#define NEOPIXEL_REGISTER 0x74
-#define NEOMATRIX_REGISTER 0x75
-#define NEOPIXEL_SHOW 0x80
+#define NEOPIXEL_REGISTER 0x72
+#define NEOPIXEL_SET 0x73
+#define NEOPIXEL_RANGE 0x74
 #define MAX_NEO 1
 
 Adafruit_NeoPixel *neopixels = NULL;
@@ -545,40 +543,21 @@ void sysexCallback(byte command, byte argc, byte *argv)
         int green = argv[2];
         int blue = argv[3];
         neopixels->setPixelColor(index, neopixels->Color(red, green, blue));
-        //neopixels->show();
-      }
-      break;
-    case NEOPIXEL_SHOW:
-      {
         neopixels->show();
       }
       break;
-    case NEOMATRIX_REGISTER:
+    case NEOPIXEL_RANGE:
       {
-        int pin = argv[0];
-        int width = argv[1];
-        int height = argv[2];
+        int startindex = argv[0];
+        int endindex = argv[1];
+        int r = argv[2];
+        int g = argv[3];
+        int b = argv[4];
 
-        if (neomatrix != NULL) {
-          delete neomatrix;
+        for(int i=startindex; i<endindex;i++){
+          neopixels->setPixelColor(i, neopixels->Color(r, g, b));
         }
-        neomatrix = new Adafruit_NeoMatrix(width, height, pin,
-          NEO_MATRIX_TOP     + NEO_MATRIX_RIGHT +
-          NEO_MATRIX_COLUMNS + NEO_MATRIX_PROGRESSIVE,
-          NEO_GRB            + NEO_KHZ800);
-        neomatrix->begin();
-      }
-      break;
-    case NEOMATRIX:
-      {
-        int id = 0;
-        int x = argv[0];
-        int y = argv[1];
-        int red = argv[2];
-        int green = argv[3];
-        int blue = argv[4];
-        neomatrix->drawPixel(x, y, neomatrix->Color(red, green, blue));
-        neomatrix->show();
+        neopixels->show();
       }
       break;
   }

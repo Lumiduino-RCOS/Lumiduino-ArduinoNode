@@ -21,7 +21,7 @@ class CustomLogger(object):
 
     def log_error(self, message, traceback):
         message = "[ERROR] message: {},\n Traceback: {} --- ".format(message, traceback, time.time())
-        self.write_log(message, traceback)
+        self.write_log(message)
 
     def log_warning(self, warning):
         message = "[WARNING] {} --- {}".format(warning, time.time())

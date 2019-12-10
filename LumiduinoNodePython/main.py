@@ -17,7 +17,10 @@ while True:
     nar.show_strip()"""
 
 def safely_close(signalnumber, frame):
-    print("Safely closing")
+    LumiduinoServer.logger().log_task_start("Beginning safe close sequence")
+    LumiduinoServer.broadcaster().close()
+    LumiduinoServer.lumiduino_tcp_server().close()
+    LumiduinoServer.arduino_service().close()
     LumiduinoServer.logger().close()
     exit(0)
 
@@ -33,7 +36,10 @@ LumiduinoServer.config.override({
         "port": 6879
     }
 })
+broadcaster = LumiduinoServer.broadcaster()
+arduino = LumiduinoServer.arduino_service()
 server = LumiduinoServer.lumiduino_tcp_server()
+
 signal.signal(signal.SIGTERM, safely_close)
 signal.signal(signal.SIGINT, safely_close)
 

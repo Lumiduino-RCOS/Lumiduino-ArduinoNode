@@ -3,7 +3,7 @@ from LumiduinoNodePython.tcpserver import TcpServer
 from LumiduinoNodePython.tcpclient import TcpClient
 from LumiduinoNodePython.customlogger import CustomLogger
 from LumiduinoNodePython.arduino_firmata import FirmataArduino
-
+from LumiduinoNodePython.node_broadcaster import NodeInformationBroadcaster
 class LumiduinoServer(containers.DeclarativeContainer):
 
     config = providers.Configuration('config')
@@ -18,6 +18,13 @@ class LumiduinoServer(containers.DeclarativeContainer):
         logger=logger
     )
 
+    broadcaster = providers.Singleton(
+        NodeInformationBroadcaster,
+        serverport=config.server.port,
+        logger=logger,
+        arduino=arduino_service
+    )
+
     lumiduino_tcp_server = providers.Singleton(
         TcpServer,
         port=config.server.port,
@@ -29,3 +36,4 @@ class LumiduinoClient(containers.DeclarativeContainer):
         TcpClient,
         arduino_service=LumiduinoServer.arduino_service,
         logger=LumiduinoServer.logger)
+

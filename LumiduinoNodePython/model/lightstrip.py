@@ -1,3 +1,5 @@
+import simplejson
+
 class NeopixelStrip(object):
 
     def __init__(self, length):
@@ -27,6 +29,11 @@ class NeopixelStrip(object):
     def has_been_shown(self):
         return self._shown        
 
+    def __json__(self):
+        return simplejson.dumps(self.pixel_array, for_json=True)
+    
+    for_json = __json__
+
 class Pixel(object):
     r: int
     g: int
@@ -46,4 +53,9 @@ class Pixel(object):
     
     def __ne__(self, other):
         return not self.__eq__(other)
+
+    def __json__(self):
+        return [self.r, self.g, self.b]
+    
+    for_json = __json__
             
