@@ -1,0 +1,7 @@
+dependency-injector==3.14.12
+-e git+https://github.com/Lumiduino-RCOS/Lumiduino-ArduinoNode.git@a2c35f476eaaeb4cc3fffa0c1db916115d597c14#egg=LumiduinoNode
+pkg-resources==0.0.0
+pyFirmata==1.1.0
+pyserial==3.4
+simplejson==3.17.0
+six==1.12.0
