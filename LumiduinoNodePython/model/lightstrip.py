@@ -16,12 +16,13 @@ class NeopixelStrip(object):
         new_pixel.r = r
         new_pixel.g = g
         new_pixel.b = b
-
-        if new_pixel != self.pixel_array[pixel]:
-            self.pixel_array[pixel] = new_pixel
-            self._shown = False
-            return True
-        return False
+        self.pixel_array[pixel] = new_pixel
+        #if new_pixel != self.pixel_array[pixel]:
+        #    self.pixel_array[pixel] = new_pixel
+        #    self._shown = False
+        #    return True
+        #return False
+        return True
 
     def show(self):
         self._shown = True
@@ -35,9 +36,6 @@ class NeopixelStrip(object):
     for_json = __json__
 
 class Pixel(object):
-    r: int
-    g: int
-    b: int
 
     def __init__(self):
         self.r = 0

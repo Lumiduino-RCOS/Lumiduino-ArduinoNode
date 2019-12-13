@@ -5,6 +5,9 @@ import time
 from LumiduinoNodePython.customlogger import CustomLogger
 from LumiduinoNodePython.arduino_firmata import FirmataArduino
 from threading import Thread
+
+PORT = 2050
+
 class NodeInformationBroadcaster(object):
 
     def __init__(self, serverport, logger: CustomLogger, arduino: FirmataArduino):
@@ -35,7 +38,7 @@ class NodeInformationBroadcaster(object):
                 #print(self.arduino.strip.pixel_array)
                 self.message['arduino_lights'] = simplejson.dumps(self.arduino.strip, for_json=True)
             message = simplejson.dumps(self.message)
-            self.socket.sendto(message.encode('ascii'), ('<broadcast>',2050))
+            self.socket.sendto(message.encode('ascii'), ('<broadcast>',PORT))
             time.sleep(1)
 
     def close(self):
@@ -43,4 +46,3 @@ class NodeInformationBroadcaster(object):
         self.logger.log_task_start("Close Broadcast Loop")
         self.broadcast_loop.join()
         self.logger.log_task_stop("Close Broadcast Loop")
-        
